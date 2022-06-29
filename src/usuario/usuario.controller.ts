@@ -1,14 +1,21 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Usuario } from './usuario.entity';
 import { UsuarioService } from './usuario.server';
 
 @Controller('users')
 export class UsuarioController {
 
-  private usuarioService = new UsuarioService();
+  constructor(private usuarioService: UsuarioService) {}
+
+  @Get(':nomeDeUsuario')
+  public buscaPorNomeDeUsuario(@Param('nomeDeUsuario') nomeDeUsuario: string) {
+    const usuarioEncontado = this.usuarioService.buscaPorNomeDeUsuario(nomeDeUsuario);
+    return usuarioEncontado;
+  }
 
   @Post()
-  public cria(@Body() usuario) {
+  public cria(@Body() usuario: Usuario): Usuario {
     const usuarioCriado = this.usuarioService.cria(usuario);
     return usuarioCriado;
   }
